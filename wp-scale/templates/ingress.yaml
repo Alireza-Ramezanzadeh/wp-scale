@@ -24,8 +24,8 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-  {{- if .Values.master.stageUrl.enabled }}
-    - host: {{ .Values.master.stageUrl.host | quote }}
+  {{- if .values.wordpress.stageUrl.enabled }}
+    - host: {{ .values.wordpress.stageUrl.host | quote }}
       http:
         paths:
           {{- if $.Values.s3syncer.enabled }}
@@ -57,7 +57,7 @@ spec:
                 name: {{ include "wp-scale.fullname" $ }}-master
                 port:
                   number: {{ $.Values.service.port | default 80 }}
-          {{- if and (ne $.Values.master.adminUrl "") (ne $.Values.master.adminUrl "/wp-admin") }}
+          {{- if and (ne $.values.wordpress.adminUrl "") (ne $.values.wordpress.adminUrl "/wp-admin") }}
           - path: /wp-admin
             pathType: Prefix
             backend:
@@ -67,7 +67,7 @@ spec:
                   number: {{ $.Values.service.port | default 80 }}
           {{- end }}
 
-          - path: {{ $.Values.master.adminUrl | default "/wp-admin" }}
+          - path: {{ $.values.wordpress.adminUrl | default "/wp-admin" }}
             pathType: Prefix
             backend:
               service:

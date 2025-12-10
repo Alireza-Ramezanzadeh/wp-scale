@@ -1,4 +1,5 @@
-master:
+wordpress:
+  replicaCount: 3
   adminUrl: /login-irbrok
   stageUrl: 
     enabled: false
@@ -12,19 +13,11 @@ master:
     storageClass: standard
 
 
-slave:
-  replicaCount: 3
-  image:
-    repository: wordpress
-    tag: php8.2-apache
-  storage:
-    enabled: false
-    size: 5Gi
-    storageClass: standard
+
 
 # to read db credentials from secret
-wordpressCredentialSecret: 
-  name: wordpress-credentials
+wordpressCredentialSecret: []
+  # name: wordpress-credentials
 
 
 imagePullSecrets: []
@@ -134,14 +127,14 @@ sftp:
 
 
 phpmyadmin:
-  enabled: true
+  enabled: false
   phpmyadminHost: 'pma.alireza.com'
   mysqlHost: 'pxc-db-haproxy.pxc.svc.cluster.local:3306'
 
 
 
 s3syncer:
-  enabled: true
+  enabled: false
   service:
     type: ClusterIP
     port: 8080

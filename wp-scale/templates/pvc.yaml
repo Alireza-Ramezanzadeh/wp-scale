@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "wp-scale.fullname" . }}-pvc
+spec:
+  resources:
+    requests:
+      storage: {{ .values.wordpress.storage.size }}
+  storageClassName: {{ .values.wordpress.storage.storageClass }}
+  

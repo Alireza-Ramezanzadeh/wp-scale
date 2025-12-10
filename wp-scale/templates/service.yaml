@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "wp-scale.fullname" . }}-master
+  name: {{ include "wp-scale.fullname" . }}-wp
   labels:
-    role: master
     {{- include "wp-scale.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}

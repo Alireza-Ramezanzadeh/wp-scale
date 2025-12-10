@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-wp
+  labels:
+    app.kubernetes.io/component: wordpress
+    {{- include "wp-scale.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.wordpress.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "wp-scale.labels" . | nindent 6 }}
+      app.kubernetes.io/component: wordpress
+  template:
+    metadata:
+      labels:
+        {{- include "wp-scale.labels" . | nindent 8 }}
+        app.kubernetes.io/component: wordpress
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: wordpress
+          image: {{ .values.wordpress.image.repository }}:{{ .values.wordpress.image.tag }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: wp-data
+              mountPath: /var/www/html
+            - name: php-config-volume
+              mountPath: /usr/local/etc/php/conf.d/customize.ini
+              subPath: customize.ini
+          # envFrom:
+          #   - secretRef:
+          #       name: {{ .Values.wordpressCredentialSecret.name }}
+      volumes:
+        - name: php-config-volume
+          configMap:
+            name: {{ .Release.Name }}-php-config
+            items:
+              - key: customize.ini
+                path: customize.ini
+        - name: wp-data
+          persistentVolumeClaim:
+            claimName: {{ include "wp-scale.fullname" . }}-pvc
