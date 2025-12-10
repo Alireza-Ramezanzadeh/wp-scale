@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "wp-scale.fullname" . }}-pvc
 spec:
+  accessModes:
+    - ReadWriteMany
   resources:
     requests:
       storage: {{ .Values.wordpress.storage.size }}
