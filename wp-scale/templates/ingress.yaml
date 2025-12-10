@@ -24,56 +24,10 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-  {{- if .values.wordpress.stageUrl.enabled }}
-    - host: {{ .values.wordpress.stageUrl.host | quote }}
-      http:
-        paths:
-          {{- if $.Values.s3syncer.enabled }}
-          - path: /wp-content/uploads
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-s3syncer
-                port:
-                  number: {{ $.Values.s3syncer.service.port | default 8080 }}
-          {{- end}}
-
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-master
-                port:
-                  number: {{ $.Values.service.port | default 80 }}
-  {{- end }}
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-          - path: /wp-login.php
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-master
-                port:
-                  number: {{ $.Values.service.port | default 80 }}
-          {{- if and (ne $.values.wordpress.adminUrl "") (ne $.values.wordpress.adminUrl "/wp-admin") }}
-          - path: /wp-admin
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-master
-                port:
-                  number: {{ $.Values.service.port | default 80 }}
-          {{- end }}
-
-          - path: {{ $.values.wordpress.adminUrl | default "/wp-admin" }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-master
-                port:
-                  number: {{ $.Values.service.port | default 80 }}
           - path: /
             pathType: Prefix
             backend:
@@ -81,14 +35,5 @@ spec:
                 name: {{ include "wp-scale.fullname" $ }}-slave
                 port:
                   number: {{ $.Values.service.port | default 80 }}
-          {{- if $.Values.s3syncer.enabled }}
-          - path: /wp-content/uploads
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ include "wp-scale.fullname" $ }}-s3syncer
-                port:
-                  number: {{ $.Values.s3syncer.service.port | default 8080 }}
-          {{- end}}
     {{- end }}
 {{- end }}

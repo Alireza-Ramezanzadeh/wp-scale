@@ -5,6 +5,5 @@ metadata:
 spec:
   resources:
     requests:
-      storage: {{ .values.wordpress.storage.size }}
-  storageClassName: {{ .values.wordpress.storage.storageClass }}
-  
+      storage: {{ .Values.wordpress.storage.size }}
+  storageClassName: {{ .Values.wordpress.storage.storageClass }}
