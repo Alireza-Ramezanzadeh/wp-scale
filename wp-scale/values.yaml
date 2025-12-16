@@ -1,16 +1,12 @@
 wordpress:
   replicaCount: 3
-  adminUrl: /login-irbrok
-  stageUrl: 
-    enabled: false
-    host: "staging.alireza.com"
-
   image:
     repository: wordpress
     tag: php8.2-apache
   storage:
     size: 10Gi
     storageClass: standard
+    mountPath: /var/www/html
 
 
 
@@ -130,7 +126,6 @@ phpmyadmin:
   enabled: false
   phpmyadminHost: 'pma.alireza.com'
   mysqlHost: 'pxc-db-haproxy.pxc.svc.cluster.local:3306'
-
 
 
 s3syncer:

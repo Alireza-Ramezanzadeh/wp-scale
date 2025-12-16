@@ -32,7 +32,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: wp-data
-              mountPath: /var/www/html
+              mountPath: {{ .Values.wordpress.storage.mountPath }}
             - name: php-config-volume
               mountPath: /usr/local/etc/php/conf.d/customize.ini
               subPath: customize.ini
